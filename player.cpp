@@ -55,9 +55,18 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         //Generate some Move
         srand(time(NULL));
         int random = rand()%((int)possible_moves.size());
-
         //Update the board
-        board.doMove(possible_moves[random], ourSide);
+        vector<int> scoreArray = scores(possible_moves);
+        //get the maximum score index in array
+        int max = 0;
+        int maxIndex = 0;
+        for(int i = 0; i < (int)scoreArray.size(); i++){
+        	if(scoreArray[i] > max){
+        		max = scoreArray[i]; 
+        		maxIndex = i;
+        	 }
+        }
+        board.doMove(possible_moves[maxIndex], ourSide);
         //ourSpots.push_back(ourMove);
         return possible_moves[random];
 	}
@@ -77,4 +86,21 @@ vector<Move *> Player::possibleMoves(){
         }
 	}
     return possible_moves;
+}
+
+//arguments: board
+//create clone of board for every move and score each move
+vector<int> Player::scores(vector<Move *> possible_moves){
+	vector<int> scoreArray;
+	for(int i = 0; i < (int)possible_moves.size(); i++){
+		Board *boardClone = board.copy();
+		boardClone->doMove(possible_moves[i], ourSide);
+		scoreArray.push_back(naiveHeuristicScore(*boardClone));
+	}
+	return scoreArray;
+}
+
+int Player::naiveHeuristicScore(Board boardClone){
+	//Our chips - opponent chips
+	return boardClone.count(ourSide) - boardClone.count(opponentSide);
 }
