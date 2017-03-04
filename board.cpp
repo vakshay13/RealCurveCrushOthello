@@ -28,13 +28,16 @@ Board *Board::copy() {
     return newBoard;
 }
 
+// checks if a space is occupied or not
 bool Board::occupied(int x, int y) {
     return taken[x + 8*y];
 }
 
+// checks if player has occupied spot
 bool Board::get(Side side, int x, int y) {
     return occupied(x, y) && (black[x + 8*y] == (side == BLACK));
 }
+
 
 void Board::set(Side side, int x, int y) {
     taken.set(x + 8*y);
