@@ -12,7 +12,7 @@ Player::Player(Side side) {
     Side ourSide = side;
     Side opponentSide;
     if(side == WHITE){ opponentSide == BlACK; } //set the opponent side
-    else{ opponentSide == WHITE; }
+    else{ opponentSide == WHITE; } // That's racist
     /*
      * TODO: Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
