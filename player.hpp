@@ -19,6 +19,8 @@ public:
     Board board; //this is the internal board the player stores
     Side ourSide;
     Side opponentSide;
+    vector<Move> opponentsSpots;
+    vector<Move> ourSpots;
 };
 
 #endif

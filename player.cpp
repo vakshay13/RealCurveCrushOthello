@@ -45,14 +45,27 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
 	board.doMove(opponentsMove, opponentSide); //update the board
+	opponentsSpots.push_back(opponentsMove);
 
 	//Analyze the board
+	if(board.hasMoves(ourSide)){
+		//get possible moves
+	}
 
 	//Generate some Move
 	Move ourMove = Move(0,0);
 
 	//Update the board
 	board.doMove(&ourMove, ourSide);
+	ourSpots.push_back(ourMove);
 
     return nullptr;
+}
+
+vector<Move> possibleMoves(){
+	//go through all the opponents spots
+	for(int i = 0; i < opponentsSpots; i++){
+		//for each opponents spots, just go through surrounding spots
+		
+	}
 }
