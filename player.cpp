@@ -48,24 +48,31 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	opponentsSpots.push_back(opponentsMove);
 
 	//Analyze the board
+    vector<Move> possible_moves;
 	if(board.hasMoves(ourSide)){
 		//get possible moves
+        possible_moves = possibleMoves();
 	}
 
 	//Generate some Move
-	Move ourMove = Move(0,0);
+    int random = rand()%((int)possible_moves.size()) + 1;
 
 	//Update the board
-	board.doMove(&ourMove, ourSide);
+	board.doMove(&possible_moves[random], ourSide);
 	ourSpots.push_back(ourMove);
 
     return nullptr;
 }
 
-vector<Move> possibleMoves(){
-	//go through all the opponents spots
-	for(int i = 0; i < opponentsSpots; i++){
-		//for each opponents spots, just go through surrounding spots
-		
+vector<Move> Player::possibleMoves(){
+	//go through all the opponents spots naively
+    vector<Move> possible_moves;
+	for(int x = 0; x < 8; x++){
+		for (int y = 0; y < 8; y++){
+            Move move = Move(x, y);
+            if (board.checkMove(move, ourSide)){
+                possible_moves.push_back(move);
+            }
+        }
 	}
 }
