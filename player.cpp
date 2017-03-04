@@ -54,7 +54,6 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         possible_moves = possibleMoves();
         //Generate some Move
         srand(time(NULL));
-        int random = rand()%((int)possible_moves.size());
         //Update the board
         vector<int> scoreArray = scores(possible_moves);
         //get the maximum score index in array
@@ -68,7 +67,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         }
         board.doMove(possible_moves[maxIndex], ourSide);
         //ourSpots.push_back(ourMove);
-        return possible_moves[random];
+        return possible_moves[maxIndex];
 	}
 
 	return nullptr;
@@ -95,7 +94,7 @@ vector<int> Player::scores(vector<Move *> possible_moves){
 	for(int i = 0; i < (int)possible_moves.size(); i++){
 		Board *boardClone = board.copy();
 		boardClone->doMove(possible_moves[i], ourSide);
-		scoreArray.push_back(naiveHeuristicScore(*boardClone));
+		scoreArray.push_back(betterNaiveHeuristicScore(*boardClone));
 	}
 	return scoreArray;
 }
@@ -103,4 +102,21 @@ vector<int> Player::scores(vector<Move *> possible_moves){
 int Player::naiveHeuristicScore(Board boardClone){
 	//Our chips - opponent chips
 	return boardClone.count(ourSide) - boardClone.count(opponentSide);
+}
+
+int Player::betterNaiveHeuristicScore(Board boardClone){
+    //found an arrray from a research paper.
+    int scores_array[8][8] = {{4, -3, 2, 2, 2, 2, -3, 4}, {-3, -4, -1, -1, -1, -1, -4, -3}, 
+    {2, -1, 1, 0, 0, 1, -1, 2}, {2, -1, 0, 1, 1, 0, -1, 2}, {2, -1, 0, 1, 1, 0, -1, 2}, 
+    {2, -1, 1, 0, 0, 1, -1, 2}, {-3, -4, -1, -1, -1, -1, -4, -3},{4, -3, 2, 2, 2, 2, -3, 4}};
+    
+    int score = 0;
+    for (int x = 0; x < 8; x++){
+        for (int y = 0; x < 8; y++){
+            if (boardClone.getIndex(ourSide, x, y)){
+                score += scores_array[x][y];
+            }
+        }
+    }
+    return score;
 }

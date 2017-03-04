@@ -19,6 +19,7 @@ public:
     vector<Move *> possibleMoves();
     vector<int> scores(vector<Move *> possible_moves);
     int naiveHeuristicScore(Board boardClone);
+    int betterNaiveHeuristicScore(Board boardClone);
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;

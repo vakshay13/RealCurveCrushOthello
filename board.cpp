@@ -104,6 +104,10 @@ bool Board::checkMove(Move *m, Side side) {
     return false;
 }
 
+bool Board::getIndex(Side side, int x, int y) {
+    return get(side, x, y);
+}
+
 /*
  * Modifies the board to reflect the specified move.
  */
@@ -143,6 +147,7 @@ void Board::doMove(Move *m, Side side) {
     }
     set(side, X, Y);
 }
+
 
 /*
  * Current count of given side's stones.
