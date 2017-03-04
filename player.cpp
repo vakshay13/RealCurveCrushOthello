@@ -11,8 +11,8 @@ Player::Player(Side side) {
     Board board = Board(); //this is the internal board the player stores
     Side ourSide = side;
     Side opponentSide;
-    if(side == WHITE){ opponentSide == BlACK; } //set the opponent side
-    else{ opponentSide == WHITE; } // That's racist
+    if(side == WHITE){ opponentSide = BLACK; } //set the opponent side
+    else{ opponentSide = WHITE; } // That's racist
     /*
      * TODO: Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
@@ -45,7 +45,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
 	board.doMove(opponentsMove, opponentSide); //update the board
-	opponentsSpots.push_back(opponentsMove);
+	//opponentsSpots.push_back(opponentsMove);
 
 	//Analyze the board
     vector<Move> possible_moves;
@@ -59,7 +59,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 
 	//Update the board
 	board.doMove(&possible_moves[random], ourSide);
-	ourSpots.push_back(ourMove);
+	//ourSpots.push_back(ourMove);
 
     return nullptr;
 }
@@ -70,9 +70,10 @@ vector<Move> Player::possibleMoves(){
 	for(int x = 0; x < 8; x++){
 		for (int y = 0; y < 8; y++){
             Move move = Move(x, y);
-            if (board.checkMove(move, ourSide)){
+            if (board.checkMove(&move, ourSide)){
                 possible_moves.push_back(move);
             }
         }
 	}
+    return possible_moves;
 }
