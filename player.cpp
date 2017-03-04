@@ -109,12 +109,19 @@ int Player::betterNaiveHeuristicScore(Board boardClone){
     int scores_array[8][8] = {{4, -3, 2, 2, 2, 2, -3, 4}, {-3, -4, -1, -1, -1, -1, -4, -3}, 
     {2, -1, 1, 0, 0, 1, -1, 2}, {2, -1, 0, 1, 1, 0, -1, 2}, {2, -1, 0, 1, 1, 0, -1, 2}, 
     {2, -1, 1, 0, 0, 1, -1, 2}, {-3, -4, -1, -1, -1, -1, -4, -3},{4, -3, 2, 2, 2, 2, -3, 4}};
-    
+    vector<vector<int>> scoresVector;
+    for(int i = 0; i < 8; i++){
+    	vector<int> row;
+    	for(int j = 0; j < 8; j++){
+    		row.push_back(scores_array[i][j]);
+    	}
+    	scoresVector.push_back(row);
+    }
     int score = 0;
     for (int x = 0; x < 8; x++){
         for (int y = 0; x < 8; y++){
             if (boardClone.getIndex(ourSide, x, y)){
-                score += scores_array[x][y];
+                score += scoresVector[x][y];
             }
         }
     }
