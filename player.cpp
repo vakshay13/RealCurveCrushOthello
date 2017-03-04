@@ -8,9 +8,8 @@
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
-    Board board = Board(); //this is the internal board the player stores
-    Side ourSide = side;
-    Side opponentSide;
+    board = Board(); //this is the internal board the player stores
+    ourSide = side;
     if(side == WHITE){ opponentSide = BLACK; } //set the opponent side
     else{ opponentSide = WHITE; } // That's racist
     /*
@@ -44,33 +43,35 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
+
 	board.doMove(opponentsMove, opponentSide); //update the board
 	//opponentsSpots.push_back(opponentsMove);
 
 	//Analyze the board
-    vector<Move> possible_moves;
+    vector<Move *> possible_moves;
 	if(board.hasMoves(ourSide)){
 		//get possible moves
         possible_moves = possibleMoves();
+        //Generate some Move
+        srand(time(NULL));
+        int random = rand()%((int)possible_moves.size());
+
+        //Update the board
+        board.doMove(possible_moves[random], ourSide);
+        //ourSpots.push_back(ourMove);
+        return possible_moves[random];
 	}
 
-	//Generate some Move
-    int random = rand()%((int)possible_moves.size()) + 1;
-
-	//Update the board
-	board.doMove(&possible_moves[random], ourSide);
-	//ourSpots.push_back(ourMove);
-
-    return nullptr;
+	return nullptr;
 }
 
-vector<Move> Player::possibleMoves(){
+vector<Move *> Player::possibleMoves(){
 	//go through all the opponents spots naively
-    vector<Move> possible_moves;
+    vector<Move*> possible_moves;
 	for(int x = 0; x < 8; x++){
 		for (int y = 0; y < 8; y++){
-            Move move = Move(x, y);
-            if (board.checkMove(&move, ourSide)){
+            Move *move = new Move(x, y);
+            if (board.checkMove(move, ourSide)){
                 possible_moves.push_back(move);
             }
         }
