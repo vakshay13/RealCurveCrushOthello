@@ -51,7 +51,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     vector<Move *> possible_moves;
 	if(board.hasMoves(ourSide)){
 		//get possible moves
-        possible_moves = possibleMoves();
+        possible_moves = possibleMoves(board);
         //Generate some Move
         srand(time(NULL));
         //Update the board
@@ -73,13 +73,13 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	return nullptr;
 }
 
-vector<Move *> Player::possibleMoves(){
+vector<Move *> Player::possibleMoves(Board boardCopy){
 	//go through all the opponents spots naively
     vector<Move*> possible_moves;
 	for(int x = 0; x < 8; x++){
 		for (int y = 0; y < 8; y++){
             Move *move = new Move(x, y);
-            if (board.checkMove(move, ourSide)){
+            if (boardCopy.checkMove(move, ourSide)){
                 possible_moves.push_back(move);
             }
         }
@@ -128,4 +128,42 @@ int Player::betterNaiveHeuristicScore(Board boardClone){
     }
     cerr<< score << endl;
     return score;
+}
+
+scoredMove Player::minimax(Board clone, int depth, bool maximizingPlayer){
+	//base case
+	if(depth == 0 || clone.isDone()){
+		return scoredMove(betterNaiveHeuristicScore(clone), Move());
+	}
+	//maximizing player
+	if(maximizingPlayer){
+		int bestValue = NEGINF; 
+		scoredMove bestMove;
+		vector<Move *> possible_moves = possibleMoves(clone);
+		for(int i = 0; i < (int)possible_moves.size(); i++){
+			Board *cloneCopy = clone.copy();
+			(*cloneCopy).doMove(possible_moves[i], ourSide);
+			scoredMove candidate = minimax(*cloneCopy, depth - 1, false);
+			if(candidate.score > bestValue){ 
+				bestValue = candidate.score;
+				bestMove = scoredMove(bestValue, candidate.move);
+			}
+		}
+		return bestMove;
+	}
+	else{
+		int bestValue = POSINF; 
+		scoredMove bestMove;
+		vector<Move *> possible_moves = possibleMoves(clone);
+		for(int i = 0; i < (int)possible_moves.size(); i++){
+			Board *cloneCopy = clone.copy();
+			(*cloneCopy).doMove(possible_moves[i], opponentSide);
+			scoredMove candidate = minimax(*cloneCopy, depth - 1, true);
+			if(candidate.score < bestValue){ 
+				bestValue = candidate.score;
+				bestMove = scoredMove(bestValue, candidate.move);
+			}
+		}
+		return bestMove;
+	}
 }

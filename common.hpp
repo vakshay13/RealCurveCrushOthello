@@ -5,6 +5,8 @@ enum Side {
     WHITE, BLACK
 };
 
+
+
 class Move {
    
 public:
@@ -13,6 +15,10 @@ public:
         this->x = x;
         this->y = y;        
     }
+    Move(){
+        this->x = 0;
+        this->y = 0;
+    }
     ~Move() {}
 
     int getX() { return x; }
@@ -20,6 +26,22 @@ public:
 
     void setX(int x) { this->x = x; }
     void setY(int y) { this->y = y; }
+};
+
+class scoredMove {
+public:
+    int score;
+    Move move;
+    scoredMove(int sc, Move mov){
+        score = sc;
+        move.x = mov.x;
+        move.y = mov.y;
+    }
+    scoredMove(){
+        score = 0;
+        move.x = 0;
+        move.y = 0;
+    }
 };
 
 #endif
