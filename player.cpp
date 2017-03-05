@@ -119,11 +119,13 @@ int Player::betterNaiveHeuristicScore(Board boardClone){
     }
     int score = 0;
     for (int x = 0; x < 8; x++){
-        for (int y = 0; x < 8; y++){
+        for (int y = 0; y < 8; y++){
             if (boardClone.getIndex(ourSide, x, y)){
+
                 score += scoresVector[x][y];
             }
         }
     }
+    cerr<< score << endl;
     return score;
 }
