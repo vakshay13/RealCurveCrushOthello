@@ -48,8 +48,9 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	//opponentsSpots.push_back(opponentsMove);
 
 	//Analyze the board
-    vector<Move *> possible_moves;
+    //vector<Move *> possible_moves;
 	if(board.hasMoves(ourSide)){
+        /*
 		//get possible moves
         possible_moves = possibleMoves(board);
         //Generate some Move
@@ -67,7 +68,11 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         }
         board.doMove(possible_moves[maxIndex], ourSide);
         //ourSpots.push_back(ourMove);
-        return possible_moves[maxIndex];
+        return possible_moves[maxIndex];*/
+        scoredMove scmove = minimax(board, 2, true);
+        cerr<< "ajsdlfjhaslkdfjh" <<scmove.score << endl;
+        Move bmove = scmove.move;
+        return &bmove;
 	}
 
 	return nullptr;
