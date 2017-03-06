@@ -69,12 +69,14 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         board.doMove(possible_moves[maxIndex], ourSide);
         //ourSpots.push_back(ourMove);
         return possible_moves[maxIndex];*/
-        scoredMove scmove = minimax(board, 2, true);
-        cerr<< "ajsdlfjhaslkdfjh" <<scmove.score << endl;
-        Move bmove = scmove.move;
-        return &bmove;
-	}
-
+        cerr << "before minimax" << endl;
+        scoredMove scmove = minimax(board, 4, true);
+        cerr << "after minimax" << endl;
+        cerr<< "ajsdlfjhaslkdfjh" <<scmove.move.x << ", " << scmove.move.y << endl;
+        Move *actualmove = new Move(scmove.move.x, scmove.move.y);
+        board.doMove(actualmove, ourSide);
+        return actualmove;
+    }
 	return nullptr;
 }
 
@@ -131,44 +133,48 @@ int Player::betterNaiveHeuristicScore(Board boardClone){
             }
         }
     }
-    cerr<< score << endl;
     return score;
 }
 
 scoredMove Player::minimax(Board clone, int depth, bool maximizingPlayer){
-	//base case
-	if(depth == 0 || clone.isDone()){
-		return scoredMove(betterNaiveHeuristicScore(clone), Move());
-	}
-	//maximizing player
-	if(maximizingPlayer){
-		int bestValue = NEGINF; 
-		scoredMove bestMove;
-		vector<Move *> possible_moves = possibleMoves(clone);
-		for(int i = 0; i < (int)possible_moves.size(); i++){
-			Board *cloneCopy = clone.copy();
-			(*cloneCopy).doMove(possible_moves[i], ourSide);
-			scoredMove candidate = minimax(*cloneCopy, depth - 1, false);
-			if(candidate.score > bestValue){ 
-				bestValue = candidate.score;
-				bestMove = scoredMove(bestValue, candidate.move);
-			}
-		}
-		return bestMove;
-	}
-	else{
-		int bestValue = POSINF; 
-		scoredMove bestMove;
-		vector<Move *> possible_moves = possibleMoves(clone);
-		for(int i = 0; i < (int)possible_moves.size(); i++){
-			Board *cloneCopy = clone.copy();
-			(*cloneCopy).doMove(possible_moves[i], opponentSide);
-			scoredMove candidate = minimax(*cloneCopy, depth - 1, true);
-			if(candidate.score < bestValue){ 
-				bestValue = candidate.score;
-				bestMove = scoredMove(bestValue, candidate.move);
-			}
-		}
-		return bestMove;
-	}
+    //base case
+    if(depth == 0 || clone.isDone()){
+        return scoredMove(betterNaiveHeuristicScore(clone), Move());
+    }
+    cerr << "1" << endl;
+    //maximizing player
+    if(maximizingPlayer){
+        int bestValue = NEGINF; 
+        Move *bestMove;
+        vector<Move *> possible_moves = possibleMoves(clone);
+        for(int i = 0; i < (int)possible_moves.size(); i++){
+            Board *cloneCopy = clone.copy();
+            (*cloneCopy).doMove(possible_moves[i], ourSide);
+            scoredMove candidate = minimax(*cloneCopy, depth - 1, false);
+            if(candidate.score > bestValue){ 
+                bestValue = candidate.score;
+                bestMove = new Move(possible_moves[i]->x, possible_moves[i]->y);
+            }
+        }
+        cerr << "2" << endl;
+        return scoredMove(bestValue, *bestMove);
+    }
+    
+    else{
+        cerr << "3" << endl;
+        int bestValue = POSINF; 
+        Move *bestMove;
+        vector<Move *> possible_moves = possibleMoves(clone);
+        for(int i = 0; i < (int)possible_moves.size(); i++){
+            Board *cloneCopy = clone.copy();
+            (*cloneCopy).doMove(possible_moves[i], opponentSide);
+            scoredMove candidate = minimax(*cloneCopy, depth - 1, true);
+            if(candidate.score < bestValue){ 
+                bestValue = candidate.score;
+                bestMove = new Move(possible_moves[i]->x, possible_moves[i]->y);
+            }
+        }
+        cerr << "4" << endl;
+        return scoredMove(bestValue, *bestMove);
+    }
 }
