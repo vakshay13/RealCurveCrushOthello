@@ -70,7 +70,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         //ourSpots.push_back(ourMove);
         return possible_moves[maxIndex];*/
         cerr << "before minimax" << endl;
-        scoredMove scmove = minimax(board, 4, true);
+        scoredMove scmove = minimax(board, 2 , true);
         cerr << "after minimax" << endl;
         cerr<< "ajsdlfjhaslkdfjh" <<scmove.move.x << ", " << scmove.move.y << endl;
         Move *actualmove = new Move(scmove.move.x, scmove.move.y);
@@ -139,7 +139,7 @@ int Player::betterNaiveHeuristicScore(Board boardClone){
 scoredMove Player::minimax(Board clone, int depth, bool maximizingPlayer){
     //base case
     if(depth == 0 || clone.isDone()){
-        return scoredMove(betterNaiveHeuristicScore(clone), Move());
+        return scoredMove(naiveHeuristicScore(clone), Move());
     }
     cerr << "1" << endl;
     //maximizing player
