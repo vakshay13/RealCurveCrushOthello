@@ -6,7 +6,7 @@
  * within 30 seconds.
  */
 Player::Player(Side side) {
-    // Will be set to true in test_minimax.cpp.
+    // Will be set to true in tcest_minimax.cpp.
     testingMinimax = false;
     board = Board(); //this is the internal board the player stores
     ourSide = side;
