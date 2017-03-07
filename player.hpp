@@ -18,7 +18,7 @@ public:
     ~Player();
 
     Move *doMove(Move *opponentsMove, int msLeft);
-    vector<Move *> possibleMoves(Board boardCopy);
+    vector<Move *> possibleMoves(Board boardCopy, Side side);
     vector<int> scores(vector<Move *> possible_moves);
     int naiveHeuristicScore(Board boardClone);
     int betterNaiveHeuristicScore(Board boardClone);
