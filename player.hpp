@@ -20,9 +20,10 @@ public:
     Move *doMove(Move *opponentsMove, int msLeft);
     vector<Move *> possibleMoves(Board boardCopy, Side side);
     vector<int> scores(vector<Move *> possible_moves);
-    int naiveHeuristicScore(Board boardClone);
-    int betterNaiveHeuristicScore(Board boardClone);
+    int naiveHeuristicScore(Board boardClone, Side side);
+    int betterNaiveHeuristicScore(Board boardClone, Side side);
     scoredMove minimax(Board clone, int depth, bool maximizingPlayer);
+    int mobilityHeuristicScore(Board boardClone, Side side);
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;

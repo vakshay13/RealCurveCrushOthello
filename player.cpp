@@ -98,17 +98,23 @@ vector<int> Player::scores(vector<Move *> possible_moves){
 	for(int i = 0; i < (int)possible_moves.size(); i++){
 		Board *boardClone = board.copy();
 		boardClone->doMove(possible_moves[i], ourSide);
-		scoreArray.push_back(betterNaiveHeuristicScore(*boardClone));
+		scoreArray.push_back(betterNaiveHeuristicScore(*boardClone, ourSide));
 	}
 	return scoreArray;
 }
 
-int Player::naiveHeuristicScore(Board boardClone){
+int Player::naiveHeuristicScore(Board boardClone, Side side){
 	//Our chips - opponent chips
-	return boardClone.count(ourSide) - boardClone.count(opponentSide);
+	Side mySide = side;
+	Side otherSide = BLACK;
+	if(mySide == BLACK){
+		otherSide = WHITE;
+	}
+
+	return boardClone.count(mySide) - boardClone.count(otherSide);
 }
 
-int Player::betterNaiveHeuristicScore(Board boardClone){
+int Player::betterNaiveHeuristicScore(Board boardClone, Side side){
     //found an arrray from a research paper.
     int scores_array[8][8] = {{4, -3, 2, 2, 2, 2, -3, 4}, {-3, -4, -1, -1, -1, -1, -4, -3}, 
     {2, -1, 1, 0, 0, 1, -1, 2}, {2, -1, 0, 1, 1, 0, -1, 2}, {2, -1, 0, 1, 1, 0, -1, 2}, 
@@ -124,13 +130,29 @@ int Player::betterNaiveHeuristicScore(Board boardClone){
     int score = 0;
     for (int x = 0; x < 8; x++){
         for (int y = 0; y < 8; y++){
-            if (boardClone.getIndex(ourSide, x, y)){
+            if (boardClone.getIndex(side, x, y)){
 
                 score += scoresVector[x][y];
             }
         }
     }
     return score;
+}
+
+int Player::mobilityHeuristicScore(Board boardClone, Side side){
+	Side mySide = side;
+	Side otherSide = BLACK;
+	if(mySide == BLACK){
+		otherSide = WHITE;
+	}
+	int ourMobility = (int)possibleMoves(boardClone, mySide).size();
+	int opponentMobility = (int)possibleMoves(boardClone, otherSide).size();
+	if((ourMobility + opponentMobility) != 0){
+		return (int)((ourMobility - opponentMobility) / (ourMobility + opponentMobility));
+	}
+	else{
+		return 0;
+	}
 }
 
 scoredMove Player::minimax(Board clone, int depth, bool maximizingPlayer){
@@ -143,7 +165,15 @@ scoredMove Player::minimax(Board clone, int depth, bool maximizingPlayer){
     }
     //base case
     if(depth == 0 || clone.isDone() || ((int)possible_moves.size() == 0)){
-        return scoredMove(betterNaiveHeuristicScore(clone) + naiveHeuristicScore(clone), Move());
+    	if(!maximizingPlayer){
+    		return scoredMove(betterNaiveHeuristicScore(clone, ourSide) + naiveHeuristicScore(clone, ourSide) + 
+    			mobilityHeuristicScore(clone, ourSide) , Move());
+    	}
+    	if(maximizingPlayer){
+    		return scoredMove(betterNaiveHeuristicScore(clone, opponentSide) + naiveHeuristicScore(clone, opponentSide) + 
+    			mobilityHeuristicScore(clone, opponentSide), Move());
+    	}
+        
     }
     //maximizing player
     if(maximizingPlayer){
