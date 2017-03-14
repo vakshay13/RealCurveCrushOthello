@@ -148,7 +148,7 @@ int Player::mobilityHeuristicScore(Board boardClone, Side side){
 	int ourMobility = (int)possibleMoves(boardClone, mySide).size();
 	int opponentMobility = (int)possibleMoves(boardClone, otherSide).size();
 	if((ourMobility + opponentMobility) != 0){
-		return (int)((ourMobility - opponentMobility) / (ourMobility + opponentMobility));
+		return (int)((ourMobility - opponentMobility) / (ourMobility + opponentMobility)) + 6*betterNaiveHeuristicScore(boardClone, ourSide);
 	}
 	else{
 		return 0;
@@ -165,15 +165,8 @@ scoredMove Player::minimax(Board clone, int depth, bool maximizingPlayer){
     }
     //base case
     if(depth == 0 || clone.isDone() || ((int)possible_moves.size() == 0)){
-    	if(!maximizingPlayer){
-    		return scoredMove(betterNaiveHeuristicScore(clone, ourSide) + naiveHeuristicScore(clone, ourSide) + 
-    			mobilityHeuristicScore(clone, ourSide) , Move());
-    	}
-    	if(maximizingPlayer){
-    		return scoredMove(betterNaiveHeuristicScore(clone, opponentSide) + naiveHeuristicScore(clone, opponentSide) + 
-    			mobilityHeuristicScore(clone, opponentSide), Move());
-    	}
-        
+
+    	return scoredMove(mobilityHeuristicScore(clone, ourSide) , Move());
     }
     //maximizing player
     if(maximizingPlayer){
